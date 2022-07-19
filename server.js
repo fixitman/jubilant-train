@@ -2,12 +2,13 @@ const express = require('express');
 const path = require('path')
 const createError = require('http-errors');
 const logger = require('morgan');
-//const rootRoutes = require('./routes/rootRoutes');
+const rootRoutes = require('./routes/rootRoutes');
 const authRoutes = require('./routes/authRoutes');
 const mongoose = require('mongoose')
 const app = express();
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const cookieParser = require('cookie-parser')
 
 require('dotenv').config('./.env');
 const port = process.env.PORT
@@ -50,6 +51,8 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser())
+app.use(require('./config/sessions'))
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('tiny'));
 
@@ -58,7 +61,7 @@ app.use(logger('tiny'));
  * ROUTES
  */
 
-//app.use('/', rootRoutes)
+app.use('/', rootRoutes)
 app.use('/auth', authRoutes)
 
 
