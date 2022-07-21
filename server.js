@@ -1,13 +1,9 @@
 const express = require('express');
+const app = express();
 const path = require('path')
-const createError = require('http-errors');
 const logger = require('morgan');
-const rootRoutes = require('./routes/rootRoutes');
 const authRoutes = require('./routes/authRoutes');
 const mongoose = require('mongoose')
-const app = express();
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser')
 
 require('dotenv').config('./.env');
@@ -22,38 +18,16 @@ mongoose.connect(process.env.MONGO_URI)
         process.exit(1);
     })
 
-
-/**
- * Session set up
- */
-
-const store = MongoStore.create({
-    mongoUrl: process.env.MONGO_URI,
-    collection: 'session'
-})
-store.on('error', function (error) {
-    console.log(error);
-})
-
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 },
-    saveUninitialized: false,
-    resave: false,
-    store: store
-}));
-
-
 /**
  * App set up
  */
 
-app.set('view engine', 'ejs');
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
 app.use(require('./config/sessions'))
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'frontend','build')));
 app.use(logger('tiny'));
 
 
@@ -61,17 +35,20 @@ app.use(logger('tiny'));
  * ROUTES
  */
 
-app.use('/', rootRoutes)
-app.use('/auth', authRoutes)
 
+app.use('/api/auth', authRoutes)
+
+
+app.get('/proxy-test',(req,res)=>{
+    res.send('talking to the API server')
+})
+
+//serve frontend if not an api call
+app.get('*', (req,res)=>{ res.sendFile(path.join(__dirname,'frontend','build','index.html'))})
 
 /**
  * Errors
  */
-
-app.use((req, res, next) => {
-    return next(createError(404, 'page not found'))
-})
 
 app.use((err, req, res, next) => {
     if (err) {
