@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser')
 require('dotenv').config('./.env');
 const port = process.env.PORT
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.LOCAL_MONGO)
     .then(() => {
         console.log('Connected to MongoDB')
     })

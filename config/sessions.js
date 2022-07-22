@@ -2,7 +2,7 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')
 
 const mongoStore = new MongoStore({
-    mongoUrl: process.env.MONGO_URI,
+    mongoUrl: process.env.LOCAL_MONGO,
     collectionName: 'sessions',
     ttl: 14*24*60*60,
     autoRemove: 'native',

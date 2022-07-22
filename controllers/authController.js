@@ -6,12 +6,15 @@ const asyncHandler = require('express-async-handler')
 
 
 const register = asyncHandler(async (req, res) => {
-    if (!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.verify) {
-        console.log(req.body)
-        res.status(400).send('invalid form data')        
+    if (!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.password2) {
+        res.json({
+            error: "Invalid form data"
+        }) 
     }
-    if (req.body.password !== req.body.verify) {
-        res.status(400).send('passwords do not match')        
+    if (req.body.password !== req.body.password2) {
+        res.json({
+            error: 'Passwords do not match'
+        })  
     }
 
     const { firstName, lastName, email, password } = req.body;
@@ -21,28 +24,36 @@ const register = asyncHandler(async (req, res) => {
         const hashedPW = bcrypt.hashSync(password,10)
         const newUser = await User.create({ firstName, lastName, email, hashedPW })
         const token = generateToken(newUser._id)
-        res.status(200).json(token)
+        res.status(200).json({
+            token: token
+        })
     } else {
-        res.status(400).send('Email exists')       
+        res.status(401).send('Email already exists') 
     }
 })
 
 const login = asyncHandler(async(req,res)=>{
     const {email, password} = req.body
-
+    
     if(!email || !password){
         res.status(400).send('invalid form data')       
     }
 
     const user = await User.findOne({email})
 
-    if(user){
-        const token = generateToken(user._id)
-        res.status(200).json(token)
+    if(!user){
+        console.log(email)
+        res.status(401).send('Invalid email or password')
     }else{
-        res.status(400).send('Invalid email or password')
+        
+        if(!bcrypt.compareSync(password,user.hashedPW)){
+            console.log(password)
+            res.status(401).send('Invalid email or password')
+        }else{
+            const token = generateToken(user._id)
+            res.status(200).json(token)
+        }
     }
-
 })
 
 function generateToken(id){
