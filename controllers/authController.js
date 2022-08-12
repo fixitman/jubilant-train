@@ -3,82 +3,137 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 
-
+const ACCESS_TOKEN_EXPIRES = '10m'
+const REFRESH_TOKEN_EXPIRES = '1d'
+const REFRESH_COOKIE_MAX_AGE = 24 * 60 * 60 * 1000 // 1 day
 
 const register = asyncHandler(async (req, res) => {
-    if (!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.password2) {
-        res.json({
-            error: "Invalid form data"
-        }) 
+    let { firstName, lastName, email, password, verify } = req.body;
+    email = email.toLowerCase()
+
+    if (!firstName || !lastName || !email || !password || !verify) {
+        return res.status(400).send('invalid form data');
     }
-    if (req.body.password !== req.body.password2) {
-        res.json({
-            error: 'Passwords do not match'
-        })  
+    if (password !== verify) {
+        return res.status(400).send('Passwords do not match')
     }
 
-    const { firstName, lastName, email, password } = req.body;
+    const user = await User.findOne({ email })
 
-    const user = await User.findOne({ email })    
-    if (!user) {
-        const hashedPW = bcrypt.hashSync(password,10)
-        const newUser = await User.create({ firstName, lastName, email, hashedPW })
-        const token = generateToken(newUser._id)
-        res.status(200).json({
-            token: token
+    if (user) {
+        return res.sendStatus(409)//conflict - user exists
+    }
+
+    const hashedPW = bcrypt.hashSync(password, 10)
+    let newUser = await User.create({ firstName, lastName, email, hashedPW })
+
+    const userInfo = {
+        id: newUser._id,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email
+    }
+
+    const tokens = await generateTokens(userInfo)
+    const { accessToken, refreshToken } = tokens
+
+    newUser.refreshToken = refreshToken
+    const updatedUser = await newUser.save()    
+
+    return res.status(200)
+        .cookie('refresh', refreshToken, { httpOnly: true, maxAge: REFRESH_COOKIE_MAX_AGE })
+        .json({
+            accessToken,
+            user: userInfo
         })
-    } else {
-        res.status(401).send('Email already exists') 
-    }
 })
 
-const login = asyncHandler(async(req,res)=>{
-    const {email, password} = req.body
-    
-    if(!email || !password){
-        res.status(400).send('invalid form data')       
+const login = asyncHandler(async (req, res) => {
+    let { email, password } = req.body
+    email = email.toLowerCase()
+
+    if (!email || !password) {
+        res.status(400).send('invalid form data')
     }
 
-    const user = await User.findOne({email})
+    const user = await User.findOne({ email })
 
-    if(!user){
+    if (!user) {
         console.log(email)
-        res.status(401).send('Invalid email or password')
-    }else{
-        
-        if(!bcrypt.compareSync(password,user.hashedPW)){
-            console.log(password)
-            res.status(401).send('Invalid email or password')
-        }else{
-            const token = generateToken(user._id)
-            res.status(200).json(token)
-        }
+        return res.status(401).send('Invalid email or password')
     }
-})
 
-function generateToken(id){
-    return jwt.sign({id},process.env.TOKEN_SECRET,{expiresIn: '1d'})
-}
-
-const authenticate = asyncHandler(async(req,res,next)=>{
-    if(req.headers.authorization && req.headers.authorization.indexOf('Bearer ') === 0){
-        const token = req.headers.authorization.split(' ')[1];
-        const validated = jwt.verify(token,process.env.TOKEN_SECRET)
-        if(validated){
-           const user = User.findById(validated.id)
-           if(user){
-            res.user = user
-            next()
-           }else{
-            res.status(401).send('no such user id')
-           }
-        }else{
-            res.sendStatus(401)
-        }
-    }else{
-        res.redirect('/auth/login')
+    if (!bcrypt.compareSync(password, user.hashedPW)) {
+        return res.status(401).send('Invalid email or password')
     }
+
+    const userInfo = {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email
+    }
+    const tokens = await generateTokens(userInfo)
+    const { accessToken, refreshToken } = tokens
+
+    user.refreshToken = refreshToken
+    await user.save()
+    
+
+    res.status(200)
+        .cookie("refresh", refreshToken, { httpOnly: true, maxAge: REFRESH_COOKIE_MAX_AGE })
+        .json({
+            accessToken,
+            user: userInfo
+        })
+
 
 })
 
-module.exports = {register,login, authenticate}
+const logout = asyncHandler(async (req, res) => {
+    const cookies = req.cookies
+    console.log('cookies', cookies)
+    if (!cookies?.refresh) return res.sendStatus(204) // no content
+    const refreshToken = cookies.refresh
+    const foundUser = await User.findOne({ refreshToken: refreshToken })
+    if (!foundUser) {
+        res.clearCookie('refresh', { httpOnly: true, maxAge: REFRESH_COOKIE_MAX_AGE })
+        return res.sendStatus(204)
+    }
+    foundUser.refreshToken = ''
+    await foundUser.save()
+    res.clearCookie('refresh', { httpOnly: true, maxAge: REFRESH_COOKIE_MAX_AGE })
+    return res.sendStatus(204)
+
+})
+
+const refresh = asyncHandler(async (req, res) => {
+    const refreshToken = req.cookies.refresh
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET,
+        async (err, decoded) => {
+            if (err) {
+                res.sendStatus(401)
+                console.log('error', err)
+            }
+            //validate refresh token and issue a new token
+            
+            const userInfo = await User.findOne({refreshToken:refreshToken}, 'id firstName lastName email')
+            if(!userInfo){
+                return res.sendStatus(401)
+            }
+
+            const newAccessToken = jwt.sign({ user: userInfo }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRES })
+            
+            res.status(200).json({ accessToken: newAccessToken, userInfo })
+        })
+})
+
+const generateTokens = asyncHandler(async (userInfo) => {
+    const accessToken = jwt.sign({ user: userInfo }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRES })
+    const refreshToken = jwt.sign({ user: userInfo }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRES })
+    await User.updateOne({ _id: userInfo.id }, { refreshToken })
+    return { accessToken, refreshToken }
+})
+
+
+module.exports = { register, login, logout, refresh }

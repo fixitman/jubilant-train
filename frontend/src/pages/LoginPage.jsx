@@ -1,40 +1,35 @@
 import React from 'react'
 import LoginForm from '../components/LoginForm'
-import {useNavigate} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 import axios from 'axios'
+import {useStoreActions} from 'easy-peasy'
 
 function LoginPage() {
 
   const navigate = useNavigate()
+  const setUser = useStoreActions(state => state.auth.setUser)
+  const setToken = useStoreActions(state=>state.auth.setToken)
+  const destination = useLocation().state?.from || '/'
 
   function authenticate(values) {
     if (values) {
-      const token = localStorage.getItem('token') || ''
-      const options={}
-      if(token){
-        options.headers={
-          Authorization: `Bearer ${token}`
-        }
-      }
-      axios.post('/api/auth/login', values,options)        
+      
+      axios.post('/api/auth/login', values)        
         .then((response) => {
-          if (response.status === 200 && response.data) {
-            localStorage.setItem('token', response.data)
-            navigate('/')
-          }
+            const {accessToken, user} = response.data
+            setToken(accessToken)
+            setUser(user)
+            navigate(destination)          
         })
         .catch(function (error) {
           if (error.response) {
             alert(`Error: ${error.response.data}`)
           } else if (error.request) {
-            console.log('error', error.req)
+            console.error('error', error.req)
           } else {
-            console.log('error', error.config)
+            console.error('error', error)
           }
         })     
-
-
-      
     }
 
   }

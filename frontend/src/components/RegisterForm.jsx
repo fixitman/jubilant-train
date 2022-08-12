@@ -11,7 +11,7 @@ const RegisterForm = ({ onSubmitForm }) => (
       lastName: "",
       email: "",
       password: "",
-      password2: ""
+      verify: ""
     }}
     validate={(values) => {
       const errors = {};
@@ -27,10 +27,10 @@ const RegisterForm = ({ onSubmitForm }) => (
       if (!values.password) {
         errors.password = "Required";
       }
-      if (!values.password2) {
+      if (!values.verify) {
         errors.password2 = "Required";
       }
-      if (!values.password2 === values.password) {
+      if (!values.verify === values.password) {
         errors.password2 = "Passwords do not match";
       }
 
@@ -90,7 +90,7 @@ const RegisterForm = ({ onSubmitForm }) => (
           component={TextField}
           type="password"
           label="Verify Password"
-          name="password2"
+          name="verify"
           helperText=""          
         />
       </Box>

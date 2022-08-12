@@ -26,9 +26,15 @@ mongoose.connect(process.env.LOCAL_MONGO)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
-app.use(require('./config/sessions'))
+//app.use(require('./config/sessions'))
 app.use(express.static(path.join(__dirname, 'frontend','build')));
 app.use(logger('tiny'));
+
+/**
+ * middlewares
+ */
+
+
 
 
 /**

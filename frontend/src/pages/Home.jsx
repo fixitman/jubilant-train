@@ -1,16 +1,33 @@
 import React from 'react'
+import {  useStoreState, useStoreActions } from 'easy-peasy'
+import { Typography } from '@mui/material'
+import axios from 'axios'
 
 
-function Home() {
 
+const Home = () => {
+  
+  const user = useStoreState(state => state.auth.user)
+  const setUser = useStoreActions(state => state.auth.setUser)
+
+  const logout = async () =>{
+    await axios.get('/api/auth/logout',{withCredentials: true})
+    setUser(null)
+
+  }
   
 
 
-
+  
   return (
-    <>
-      <h1>Home</h1>
+    <> 
+       <Typography variant='h3'> {`Welcome, ${user.firstName}!`}</Typography>
+       <button onClick={logout}>logout</button>
       
+
+
+      
+
     </>
   )
 }

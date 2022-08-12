@@ -17,6 +17,10 @@ const userSchema = new Mongoose.Schema({
         type: String,
         required: true,
     },
+    refreshToken:{
+        type: String,
+        required: false
+    }
     
 })
 
