@@ -135,5 +135,9 @@ const generateTokens = asyncHandler(async (userInfo) => {
     return { accessToken, refreshToken }
 })
 
+const invalidMethod = (req,res)=>{
+    res.sendStatus(405) // method not allowed
+}
 
-module.exports = { register, login, logout, refresh }
+
+module.exports = { register, login, logout, refresh, invalidMethod }

@@ -6,14 +6,13 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
-    "client": "npm start --prefix frontend",
+    "client": "npm start --prefix ..\\frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\" "
   },
   "author": "Mike Collins",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "concurrently": "^7.3.0",
     "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.1",
@@ -23,5 +22,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.4.4",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "concurrently": "^7.3.0"
   }
 }
