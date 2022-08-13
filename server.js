@@ -6,7 +6,6 @@ const logger = require('morgan');
 const authRoutes = require('./routes/authRoutes');
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
-
 require('dotenv').config('./.env');
 const port = process.env.PORT
 
@@ -34,17 +33,11 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
 app.use(logger('tiny'));
 
-
-
-
-
 /**
  * ROUTES
  */
 
-
 app.use('/api/auth', authRoutes)
-
 
 app.get('/proxy-test', (req, res) => {
     res.send('talking to the API server')
@@ -55,26 +48,31 @@ app.all('*', (req, res) => {
     const frontEndPath = path.join(__dirname, '..', 'frontend', 'build', 'index.html')
     if (fs.existsSync(frontEndPath)) {
         res.sendFile(frontEndPath)
-    }else{
+    } else {
         res.sendStatus(404)
     }
 })
 
 
-    /**
-     * Errors
-     */
+/**
+ * Errors
+ */
 
-    app.use((err, req, res, next) => {
-        if (err) {
-            console.log(err.message);
-            res.send(err.message)
-        }
-    })
+app.use((err, req, res, next) => {
+    if (err) {
+        console.log(err.message);
+        res.send(err.message)
+    }
+})
 
-    app.listen(port, () => {
-        console.log(`listening on port ${port}`)
-    });
+
+/**
+ * Launch
+ */
+
+app.listen(port, () => {
+    console.log(`listening on port ${port}`)
+});
 
 
 
