@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 
-const ACCESS_TOKEN_EXPIRES = '10m'
+const ACCESS_TOKEN_EXPIRES = '10s'
 const REFRESH_TOKEN_EXPIRES = '1d'
 const REFRESH_COOKIE_MAX_AGE = 24 * 60 * 60 * 1000 // 1 day
 
@@ -117,9 +117,15 @@ const refresh = asyncHandler(async (req, res) => {
             }
             //validate refresh token and issue a new token
             
-            const userInfo = await User.findOne({refreshToken:refreshToken}, 'id firstName lastName email')
-            if(!userInfo){
+            const user = await User.findOne({refreshToken:refreshToken}, 'id firstName lastName email')
+            if(!user){
                 return res.sendStatus(401)
+            }
+            const userInfo = {
+                id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email
             }
 
             const newAccessToken = jwt.sign({ user: userInfo }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRES })

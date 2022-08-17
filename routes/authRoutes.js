@@ -18,10 +18,11 @@ router.all('/refresh', authController.invalidMethod)
 
 //for testing only
 function test(req,res){
-    res.status(200).json(req.user)
+    console.log('test route')
+    res.status(200).json({data:"test success!"})
 }
 
-router.post('/test', authenticate, test)
+router.get('/test', authenticate, test)
 router.all('/test', authController.invalidMethod)
 
 module.exports = router
