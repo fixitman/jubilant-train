@@ -1,5 +1,8 @@
 node_modules
 .env
+Procfile
+frontend/build
+backend
 
 
 

@@ -13,7 +13,9 @@ const port = process.env.PORT
  * App set up
  */
 
-mongoose.connect(process.env.LOCAL_MONGO)
+const db = process.env.NODE_ENV === 'production' ? process.env.MONGO_URI : LOCAL_MONGO
+
+mongoose.connect(db)
     .then(() => {
         console.log('Connected to MongoDB')
     })
@@ -30,7 +32,7 @@ mongoose.connect(process.env.LOCAL_MONGO)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
+app.use(express.static(path.join(__dirname,  'frontend', 'build')));
 app.use(logger('tiny'));
 
 /**
@@ -45,7 +47,7 @@ app.get('/proxy-test', (req, res) => {
 
 //serve frontend if not an api call
 app.all('*', (req, res) => {
-    const frontEndPath = path.join(__dirname, '..', 'frontend', 'build', 'index.html')
+    const frontEndPath = path.join(__dirname,  'frontend', 'build', 'index.html')
     if (fs.existsSync(frontEndPath)) {
         res.sendFile(frontEndPath)
     } else {
