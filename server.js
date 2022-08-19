@@ -13,7 +13,7 @@ const port = process.env.PORT
  * App set up
  */
 
-const db = process.env.NODE_ENV === 'production' ? process.env.MONGO_URI : LOCAL_MONGO
+const db = process.env.NODE_ENV === 'production' ? process.env.MONGO_URI : process.env.LOCAL_MONGO
 
 mongoose.connect(db)
     .then(() => {
