@@ -1,20 +1,20 @@
 const router = require('express').Router();
-const authController = require('../controllers/authController')
 const authenticate = require('../middlewares/authenticate')
 
+const { register, login, logout, refresh, invalidMethod } = require('../controllers/authController')
 
 
-router.post('/register', authController.register)
-router.all('/register', authController.invalidMethod)
+router.post('/register', register)
+router.all('/register', invalidMethod)
 
-router.post('/login', authController.login)
-router.all('/login', authController.invalidMethod)
+router.post('/login', login)
+router.all('/login', invalidMethod)
 
-router.get('/logout', authController.logout)
-router.all('/logout', authController.invalidMethod)
+router.get('/logout', logout)
+router.all('/logout', invalidMethod)
 
-router.get('/refresh', authController.refresh)
-router.all('/refresh', authController.invalidMethod)
+router.get('/refresh', refresh)
+router.all('/refresh', invalidMethod)
 
 //for testing only
 function test(req,res){
@@ -23,6 +23,6 @@ function test(req,res){
 }
 
 router.get('/test', authenticate, test)
-router.all('/test', authController.invalidMethod)
+router.all('/test', invalidMethod)
 
 module.exports = router

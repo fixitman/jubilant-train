@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 
-const ACCESS_TOKEN_EXPIRES = '10s'
+const ACCESS_TOKEN_EXPIRES = '15m'
 const REFRESH_TOKEN_EXPIRES = '1d'
 const REFRESH_COOKIE_MAX_AGE = 24 * 60 * 60 * 1000 // 1 day
 
