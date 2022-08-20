@@ -13,5 +13,5 @@ module.exports = session({
     cookie: {maxAge: 1000*60*60*24},
     resave: false,
     store: mongoStore,      
-    saveUninitialized: true    
+    saveUninitialized: false    
 })
