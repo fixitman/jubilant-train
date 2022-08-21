@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "server": "cd ..\\backend && nodemon server",
+    "server": "cd .. && nodemon server",
     "build": "react-scripts build"
     
   },

@@ -7,7 +7,7 @@ import { useStoreActions } from "easy-peasy";
 
 const LoginForm = ({ onSubmitForm }) => {
   const setError = useStoreActions(state => state.error.setError)
-  
+
   return (
     <Formik
       initialValues={{
@@ -33,7 +33,11 @@ const LoginForm = ({ onSubmitForm }) => {
         <Form>
           <Box margin={1}>
             <Field
-              sx={{ width: "400px" }}
+              sx={{
+                maxWidth: "400px",
+                mb: 2
+                
+              }}
               component={TextField}
               name="email"
               type="email"
@@ -46,7 +50,7 @@ const LoginForm = ({ onSubmitForm }) => {
           </Box>
           <Box margin={1}>
             <Field
-              sx={{ width: "400px" }}
+              sx={{ maxWidth: "400px", mt: 2 }}
               component={TextField}
               type="password"
               label="Password"
@@ -72,11 +76,11 @@ const LoginForm = ({ onSubmitForm }) => {
             </Button>
             <Button
               sx={{ margin: 1 }}
-              variant="contained"
-              color="secondary"
+              variant="outlined"
+              color="primary"
               disabled={isSubmitting}
               onClick={() => {
-                setError("Reset")
+                setError('')
                 resetForm();
               }}
             >

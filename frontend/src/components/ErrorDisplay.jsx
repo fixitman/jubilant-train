@@ -7,8 +7,8 @@ function ErrorDisplay() {
 
     if (error?.length > 0) {
         return (
-            <div>
-                <Typography variant='h4'>{error}</Typography>
+            <div className='error'>
+                <Typography variant='p'>{error}</Typography>
             </div>
         )
     }else{
