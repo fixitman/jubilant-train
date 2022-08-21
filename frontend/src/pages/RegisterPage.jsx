@@ -41,12 +41,13 @@ function RegisterPage() {
           mx: "auto",
           mt: '5rem',
           borderWidth: '4px',
+          backgroundColor: '#faefe1',
           borderStyle: 'solid',
           borderColor: "primary.main",
           borderRadius: '2.5rem',
           width: 400,
-          padding: '2rem',
-          backgroundColor: 'white'
+          padding: '2rem'
+          
         }}
       >
         <Typography variant='h4' color={"primary.main"} mb={"2rem"}>

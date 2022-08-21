@@ -31,7 +31,7 @@ const LoginForm = ({ onSubmitForm }) => {
     >
       {({ values, submitForm, resetForm, isSubmitting, touched, errors }) => (
         <Form>
-          <Box margin={2}>
+          <Box margin={2} >
             <Field
               sx={{ maxWidth: "400px" }}
               component={TextField}

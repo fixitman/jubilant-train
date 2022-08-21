@@ -39,17 +39,18 @@ function LoginPage() {
 
   return (
     <>
-      <Box
+      <Box 
         sx={{
           mx: "auto",
           mt: '5rem',
+          backgroundColor: '#faefe1',
           borderWidth: '4px',
           borderStyle: 'solid',
           borderColor: "primary.main",
           borderRadius: '2.5rem',
           width: 400,
-          padding : '2rem',
-          backgroundColor: 'white'          
+          padding : '2rem'
+             
         }}
       >
         <Typography variant='h4'color={"primary.main"} mb={"2rem"}>
