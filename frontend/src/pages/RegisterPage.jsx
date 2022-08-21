@@ -1,34 +1,34 @@
 import React from 'react'
 import RegisterForm from '../components/RegisterForm'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-import {useStoreActions} from 'easy-peasy'
+import { useNavigate, Link } from 'react-router-dom'
+import { useStoreActions } from 'easy-peasy'
+import { Box, Typography } from '@mui/material'
 
 
 function RegisterPage() {
 
   const navigate = useNavigate()
-  const setToken = useStoreActions(state=>state.auth.setToken)
-  const setUser = useStoreActions(state=>state.auth.setUser)
+  const setToken = useStoreActions(state => state.auth.setToken)
+  const setUser = useStoreActions(state => state.auth.setUser)
+  const setError = useStoreActions(state => state.error.setError)
 
   function register(values) {
 
     if (values) {
-      
-      axios.post('/api/auth/register', values)        
+
+      axios.post('/api/auth/register', values)
         .then((response) => {
-            const {accessToken, user} = response.data
-            setToken(accessToken)
-            setUser(user)
-            navigate('/')          
+          const { accessToken, user } = response.data
+          setToken(accessToken)
+          setUser(user)
+          navigate('/')
         })
         .catch(function (error) {
           if (error.response) {
-            alert(`Error: ${error.response.data}`)
-          } else if (error.request) {
-            console.log('error', error.req)
+            setError(error.response.data)
           } else {
-            console.log('error', error.config)
+            console.error('error', error.config)
           }
         })
     }
@@ -36,8 +36,28 @@ function RegisterPage() {
 
   return (
     <>
-      <h1>Register Page</h1>
-      <RegisterForm onSubmitForm={register} />
+      <Box
+        sx={{
+          mx: "auto",
+          mt: '5rem',
+          borderWidth: '4px',
+          borderStyle: 'solid',
+          borderColor: "primary.main",
+          borderRadius: '2.5rem',
+          width: 400,
+          padding: '2rem',
+          backgroundColor: 'white'
+        }}
+      >
+        <Typography variant='h4' color={"primary.main"} mb={"2rem"}>
+          Sign Up
+        </Typography>
+        <RegisterForm onSubmitForm={register} />
+        <Box sx={{ textAlign: 'center' }} >
+          <p>Have an account? <Link to={'/login'} >Log in</Link></p>
+        </Box>
+
+      </Box>
     </>
 
 

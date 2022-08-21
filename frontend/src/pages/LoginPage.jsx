@@ -1,6 +1,6 @@
 import React from 'react'
 import LoginForm from '../components/LoginForm'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import { useStoreActions } from 'easy-peasy'
 import { Box, Typography } from '@mui/material'
@@ -47,7 +47,7 @@ function LoginPage() {
           borderStyle: 'solid',
           borderColor: "primary.main",
           borderRadius: '2.5rem',
-          width: 300,
+          width: 400,
           padding : '2rem',
           backgroundColor: 'white'          
         }}
@@ -56,8 +56,10 @@ function LoginPage() {
           Please log in
         </Typography>
         <LoginForm onSubmitForm={authenticate} />
+        <Box sx={{textAlign:'center'}} ><p>No account? <Link to={'/register'} >Sign Up</Link></p></Box>
 
       </Box>
+
     </>
 
 
