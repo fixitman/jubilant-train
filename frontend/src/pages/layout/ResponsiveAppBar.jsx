@@ -14,14 +14,14 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom'
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = [ 'Logout'];
+const pages = ['Products', 'Pricing', 'Secret'];
+const settings = ['Logout'];
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -41,7 +41,7 @@ const navigate = useNavigate()
   const handleMenuClick = (page) => {
     handleCloseNavMenu()
     console.log('navigating')
-    navigate(page === 'Blog' ? '/secrets' : '/')
+    navigate(page === 'Secret' ? '/secrets' : '/')
   }
 
 
@@ -98,7 +98,7 @@ const navigate = useNavigate()
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={()=> handleMenuClick(page)}>
+                <MenuItem key={page} onClick={() => handleMenuClick(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -127,7 +127,7 @@ const navigate = useNavigate()
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseUserMenu}
+                onClick={() => handleMenuClick(page)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
