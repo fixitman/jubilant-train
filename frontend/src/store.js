@@ -19,6 +19,11 @@ const store = createStore(
             setUser: action((state, payload) => {
                 state.user = payload
             }),
+            logout: action((state, payload) => {
+                state.user = null;
+                state.token = null;
+            }),
+            
         })
 
     }

@@ -70,7 +70,7 @@ const LoginForm = ({ onSubmitForm }) => {
               disabled={isSubmitting}
               type="submit"
             >
-              Login
+              Log in
             </Button>
             <Button
               sx={{ ml: 2 }}

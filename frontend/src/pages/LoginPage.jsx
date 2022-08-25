@@ -45,10 +45,10 @@ function LoginPage() {
         sx={{
           mx: "auto",
           mt: '5rem',
-          backgroundColor: theme.palette.Bone,          
+          backgroundColor: theme.palette.Linen,          
           borderWidth: '4px',
           borderStyle: 'solid',
-          borderColor: "primary.dark",
+          borderColor: "primary.main",
           borderRadius: '2.5rem',
           width: 400,
           padding : '2rem'

@@ -5,13 +5,13 @@ import colors from './colors'
 const appTheme = createTheme({
     palette: {
         primary: {
-            main: colors.GoGreen,
+            main: colors['GO Green'],
         },
         secondary: {
-            main: colors.Camel,
+            main: colors['Camel'],
         },
         background: {
-            paper: colors.Isabelline
+            paper: colors['Isabelline']
         },
         ...colors,
     },

@@ -5,34 +5,35 @@
     --honeydew: #d4edddff;
     --misty-rose: #f5e3dfff;
     --isabelline: #f8f5f1ff;
+    --linen: #faefe1ff;
     --bone: #ebe2d6ff;
     --camel: #b18d59ff;
     --cafe-noir: #564424ff;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-button,
-input,
-select {
-    font: inherit;
-}
+    button,
+    input,
+    select {
+        font: inherit;
+    }
 
-body {
-    min-height: 100%;
-    background-color: var(--isabelline);
-    
-}
+    body {
+        min-height: 100%;
+        background-color: var(--isabelline);
 
-.error {
-    border: 1px solid red;
-    border-radius: 4px;
-    background-color: var(--misty-rose);
-    padding: .5rem;
-    margin: .5rem;
-    color: red;
-}
+    }
+
+    .error {
+        border: 1px solid red;
+        border-radius: 4px;
+        background-color: var(--misty-rose);
+        padding: .5rem;
+        margin: .5rem;
+        color: red;
+    }
