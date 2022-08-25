@@ -4,6 +4,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import { useStoreActions } from 'easy-peasy'
 import { Box, Typography } from '@mui/material'
+import { useTheme } from "@mui/material/styles";
 
 
 function LoginPage() {
@@ -13,6 +14,7 @@ function LoginPage() {
   const setError = useStoreActions(state => state.error.setError)
   const setToken = useStoreActions(state => state.auth.setToken)
   const destination = useLocation().state?.from || '/'
+  const theme = useTheme()
 
   function authenticate(values) {
     setError('')
@@ -43,21 +45,21 @@ function LoginPage() {
         sx={{
           mx: "auto",
           mt: '5rem',
-          backgroundColor: '#faefe1',
+          backgroundColor: theme.palette.Bone,          
           borderWidth: '4px',
           borderStyle: 'solid',
-          borderColor: "primary.main",
+          borderColor: "primary.dark",
           borderRadius: '2.5rem',
           width: 400,
           padding : '2rem'
              
         }}
       >
-        <Typography variant='h4'color={"primary.main"} mb={"2rem"}>
+        <Typography variant='h4'color={"primary"} mb={4}>
           Please log in
         </Typography>
         <LoginForm onSubmitForm={authenticate} />
-        <Box sx={{textAlign:'center'}} ><p>No account? <Link to={'/register'} >Sign Up</Link></p></Box>
+        <Box sx={{textAlign:'center', mt:5}} ><p>No account? <Link to={'/register'} >Sign Up</Link></p></Box>
 
       </Box>
 

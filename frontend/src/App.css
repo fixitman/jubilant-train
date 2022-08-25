@@ -1,18 +1,37 @@
-*{
-    margin:0;
-    padding:0;
+:root {
+    --phthalo-green: #23432eff;
+    --amazon: #3f7853ff;
+    --go-green: #46a667ff;
+    --honeydew: #d4edddff;
+    --misty-rose: #f5e3dfff;
+    --isabelline: #f8f5f1ff;
+    --bone: #ebe2d6ff;
+    --camel: #b18d59ff;
+    --cafe-noir: #564424ff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-body{
-    min-height: 100%;
-    background-color: #eee;   
+button,
+input,
+select {
+    font: inherit;
 }
 
-.error{
+body {
+    min-height: 100%;
+    background-color: var(--isabelline);
+    
+}
+
+.error {
     border: 1px solid red;
     border-radius: 4px;
-    background-color: rgb(248, 207, 213);
+    background-color: var(--misty-rose);
     padding: .5rem;
     margin: .5rem;
     color: red;

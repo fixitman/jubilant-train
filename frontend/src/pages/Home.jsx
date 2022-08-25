@@ -1,13 +1,13 @@
 import React from 'react'
 import { useStoreState, useStoreActions } from 'easy-peasy'
 import { Typography } from '@mui/material'
-import usePrivateAxios from '../hooks/usePrivateAxios'
+//import usePrivateAxios from '../hooks/usePrivateAxios'
 import axios from '../api/axios'
 
 
 const Home = () => {
   
-  const privateAxios = usePrivateAxios()
+  //const privateAxios = usePrivateAxios()
   const user = useStoreState(state => state.auth.user)
   const setError = useStoreActions(state => state.error.setError)
   const setUser = useStoreActions(state => state.auth.setUser)
@@ -20,7 +20,7 @@ const Home = () => {
     setError(null)
   }
 
-  const handleClick = async (e) => {
+/*   const handleClick = async (e) => {
     await privateAxios.get('/auth/login')   
       .catch((e) => {
         console.log('CAUGHT',e.message)
@@ -40,16 +40,16 @@ const Home = () => {
     }else{
       console.log('result is empty')
     }
-  }
+  } */
 
   return (
     <>
       <Typography variant='h3'> {`Welcome, ${user.firstName}!`}</Typography>
       <button onClick={logout}>logout</button>
-      <br />
+      {/* <br />
       <button onClick={handleClick}>button</button>
       <br />
-      <button onClick={handleClick2}>button2</button>
+      <button onClick={handleClick2}>button2</button> */}
     </>
   )
 }

@@ -5,8 +5,10 @@ import { TextField } from "formik-mui";
 import { EmailOutlined, Lock } from "@mui/icons-material";
 import { useStoreActions } from "easy-peasy";
 
+
 const LoginForm = ({ onSubmitForm }) => {
   const setError = useStoreActions(state => state.error.setError)
+ 
 
   return (
     <Formik
@@ -33,7 +35,7 @@ const LoginForm = ({ onSubmitForm }) => {
         <Form>
           <Box margin={2} >
             <Field
-              sx={{ maxWidth: "400px" }}
+              sx={{ width: "100%" }}
               component={TextField}
               name="email"
               type="email"
@@ -44,9 +46,9 @@ const LoginForm = ({ onSubmitForm }) => {
               }}
             />
           </Box>
-          <Box margin={2}>
+          <Box margin={2} >
             <Field
-              sx={{ maxWidth: "400px", mt: 2 }}
+              sx={{ width: "100%", mt: 2 }}
               component={TextField}
               type="password"
               label="Password"
@@ -60,18 +62,18 @@ const LoginForm = ({ onSubmitForm }) => {
 
           {isSubmitting && <LinearProgress />}
 
-          <Box margin={2}>
+          <Box margin={2} mt={4}>
             <Button
-              sx={{ margin: 1 }}
+              //sx={{ margin: 1 }}
               variant="contained"
-              color="primary"
+              color="secondary"
               disabled={isSubmitting}
               type="submit"
             >
               Login
             </Button>
             <Button
-              sx={{ margin: 1 }}
+              sx={{ ml: 2 }}
               variant="outlined"
               color="primary"
               disabled={isSubmitting}
