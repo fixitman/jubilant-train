@@ -53,7 +53,7 @@ return (
             sx={{ maxWidth: "400px" }}
             component={TextField}
             name="firstName"
-            type="emailtext"
+            type="text"
             label="First Name"
             helperText=""
           />
@@ -63,7 +63,7 @@ return (
             sx={{ maxWidth: "400px" }}
             component={TextField}
             name="lastName"
-            type="emailtext"
+            type="text"
             label="Last Name"
             helperText=""
           />
