@@ -1,7 +1,11 @@
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
-const asyncHandler = require('express-async-handler')
+//const asyncHandler = require('express-async-handler')
 
+const asyncHandler = fn => (req, res, next) => {
+    fn(req, res, next)
+    .catch(next);
+}  
 
 const authenticate = asyncHandler(async (req, res, next) => {
     if (req.headers?.authorization?.indexOf('Bearer ') !== 0) {
@@ -24,10 +28,6 @@ const authenticate = asyncHandler(async (req, res, next) => {
             return res.sendStatus(401)
         }
     })
-    
-
-
-
 
 })
 

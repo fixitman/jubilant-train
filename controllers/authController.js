@@ -1,13 +1,20 @@
 const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const asyncHandler = require('express-async-handler')
+//const asyncHandler = require('express-async-handler')
 
 const ACCESS_TOKEN_EXPIRES = '15m'
 const REFRESH_TOKEN_EXPIRES = '1d'
 const REFRESH_COOKIE_MAX_AGE = 24 * 60 * 60 * 1000 // 1 day
 
-const register = asyncHandler(async (req, res) => {
+const asyncHandler = fn => (req, res, next) => {
+    fn(req, res, next)
+    .catch(next);
+}  
+
+
+
+const register = asyncHandler(async (req, res, next) => {
     let { firstName, lastName, email, password, verify } = req.body;
     email = email.toLowerCase()
 
@@ -48,7 +55,7 @@ const register = asyncHandler(async (req, res) => {
         })
 })
 
-const login = asyncHandler(async (req, res) => {
+const login = asyncHandler(async (req, res, next) => {
     let { email, password } = req.body
     email = email.toLowerCase()
 
@@ -90,7 +97,7 @@ const login = asyncHandler(async (req, res) => {
 
 })
 
-const logout = asyncHandler(async (req, res) => {
+const logout = asyncHandler(async (req, res, next) => {
     const cookies = req.cookies
     console.log('cookies', cookies)
     if (!cookies?.refresh) return res.sendStatus(204) // no content
@@ -107,7 +114,7 @@ const logout = asyncHandler(async (req, res) => {
 
 })
 
-const refresh = asyncHandler(async (req, res) => {
+const refresh = asyncHandler(async (req, res, next) => {
     const refreshToken = req.cookies.refresh
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET,
         async (err, decoded) => {
@@ -134,12 +141,12 @@ const refresh = asyncHandler(async (req, res) => {
         })
 })
 
-const generateTokens = asyncHandler(async (userInfo) => {
+const generateTokens = async (userInfo) => {
     const accessToken = jwt.sign({ user: userInfo }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRES })
     const refreshToken = jwt.sign({ user: userInfo }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRES })
-    await User.updateOne({ _id: userInfo.id }, { refreshToken })
+    await User.updateOne({ _id: userInfo.id }, { refreshToken })        
     return { accessToken, refreshToken }
-})
+}
 
 const invalidMethod = (req,res)=>{
     res.sendStatus(405) // method not allowed
