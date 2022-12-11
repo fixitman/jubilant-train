@@ -1,5 +1,9 @@
 const Thing = require('../models/Thing')
-const asyncHandler = require('express-async-handler')
+
+const asyncHandler = fn => (req, res, next) => {
+    fn(req, res, next)
+    .catch(next);
+}  
 
 const getAllById = asyncHandler(async (req, res) => {
     if (!req.user) {

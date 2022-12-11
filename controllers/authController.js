@@ -119,8 +119,8 @@ const refresh = asyncHandler(async (req, res, next) => {
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET,
         async (err, decoded) => {
             if (err) {
-                res.sendStatus(401)
                 console.log('error', err)
+                return res.sendStatus(401)
             }
             //validate refresh token and issue a new token
             
